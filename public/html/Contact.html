@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact via WhatsApp - BLACKWAVE API</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+      --bg: #0f1115;
+      --card: rgba(27,31,39,0.6);
+      --border: rgba(44,47,56,0.5);
+      --text: #e6e6e6;
+      --muted: #9da3ae;
+      --accent: #7a6c55;
+      --danger: #ff4c4c;
+      --success: #25d366;
+      --warning: #ffd166;
+      --info: #118ab2;
+      --primary: #7a6c55;
+      --whatsapp: #25d366;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0d0f12, #1b1f27);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(37, 211, 102, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(122,108,85,0.1) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(27,31,39,0.3) 0%, transparent 60%);
+      z-index: -1;
+      pointer-events: none;
+      animation: gradientShift 15s ease infinite alternate;
+    }
+    
+    @keyframes gradientShift {
+      0% { 
+        background-position: 0% 50%; 
+        transform: scale(1);
+      }
+      50% { 
+        background-position: 100% 50%; 
+        transform: scale(1.02);
+      }
+      100% { 
+        background-position: 0% 50%; 
+        transform: scale(1);
+      }
+    }
+    
+    /* Floating Elements */
+    .floating-element {
+      position: fixed;
+      border-radius: 50%;
+      background: rgba(122,108,85,0.1);
+      border: 2px solid rgba(122,108,85,0.2);
+      z-index: -1;
+      animation: float 20s infinite linear;
+      pointer-events: none;
+    }
+    
+    .floating-element:nth-child(1) {
+      top: 15%;
+      left: 10%;
+      width: 70px;
+      height: 70px;
+      animation-delay: 0s;
+    }
+    
+    .floating-element:nth-child(2) {
+      top: 70%;
+      left: 15%;
+      width: 40px;
+      height: 40px;
+      animation-delay: -5s;
+    }
+    
+    .floating-element:nth-child(3) {
+      top: 20%;
+      right: 10%;
+      width: 90px;
+      height: 90px;
+      animation-delay: -10s;
+    }
+    
+    .floating-element:nth-child(4) {
+      top: 80%;
+      right: 15%;
+      width: 50px;
+      height: 50px;
+      animation-delay: -15s;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(20px, 40px) rotate(90deg);
+      }
+      50% {
+        transform: translate(0, 80px) rotate(180deg);
+      }
+      75% {
+        transform: translate(-20px, 40px) rotate(270deg);
+      }
+      100% {
+        transform: translate(0, 0) rotate(360deg);
+      }
+    }
+    
+    /* Back to Dashboard Button */
+    .back-button {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      background: rgba(27,31,39,0.6);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      z-index: 100;
+    }
+    
+    .back-button:hover {
+      background: rgba(122, 108, 85, 0.2);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(122, 108, 85, 0.2);
+    }
+    
+    /* Main Container */
+    .container {
+      max-width: 600px;
+      width: 100%;
+      margin: 40px auto;
+      padding: 40px;
+      background: rgba(27,31,39,0.6);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+      animation: containerAppear 0.8s ease;
+    }
+    
+    @keyframes containerAppear {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at top right, rgba(122,108,85,0.1), transparent 70%);
+      pointer-events: none;
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    
+    .header-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(37, 211, 102, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      border: 2px solid rgba(37, 211, 102, 0.3);
+      animation: pulseIcon 2s infinite;
+    }
+    
+    @keyframes pulseIcon {
+      0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 20px rgba(37, 211, 102, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+      }
+    }
+    
+    .header-icon i {
+      font-size: 36px;
+      color: var(--whatsapp);
+    }
+    
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .header p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: var(--text);
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .form-label i {
+      color: var(--accent);
+      font-size: 14px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(15, 17, 21, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    
+    .form-input::placeholder {
+      color: var(--muted);
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--whatsapp);
+      box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+      background: rgba(15, 17, 21, 0.7);
+      transform: translateY(-2px);
+    }
+    
+    .form-input:hover {
+      border-color: rgba(122,108,85,0.7);
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Submit Button */
+    .submit-button {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--whatsapp), #1da851);
+      border: none;
+      border-radius: 12px;
+      color: #000;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .submit-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .submit-button:hover::before {
+      left: 100%;
+    }
+    
+    .submit-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+      background: linear-gradient(135deg, #1da851, var(--whatsapp));
+    }
+    
+    .submit-button:active {
+      transform: translateY(-1px);
+    }
+    
+    /* Contact Info */
+    .contact-info {
+      background: rgba(15, 17, 21, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 25px;
+      margin-top: 30px;
+      text-align: center;
+    }
+    
+    .contact-info h3 {
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .contact-info h3 i {
+      color: var(--whatsapp);
+    }
+    
+    .phone-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--whatsapp);
+      background: rgba(37, 211, 102, 0.1);
+      padding: 12px 24px;
+      border-radius: 12px;
+      display: inline-block;
+      margin: 10px 0;
+      border: 1px solid rgba(37, 211, 102, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .phone-number:hover {
+      background: rgba(37, 211, 102, 0.2);
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(37, 211, 102, 0.2);
+    }
+    
+    .response-time {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .response-time i {
+      color: var(--accent);
+    }
+    
+    /* Message Box */
+    .msgBox {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 16px 30px;
+      border-radius: 12px;
+      background: rgba(27,31,39,0.9);
+      color: var(--text);
+      border: 1px solid var(--border);
+      text-shadow: none;
+      display: none;
+      z-index: 9999;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      animation: slideDown 0.5s ease;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+    
+    .msgBox.error {
+      border-color: var(--danger);
+      background: rgba(255, 76, 76, 0.1);
+    }
+    
+    .msgBox.success {
+      border-color: var(--whatsapp);
+      background: rgba(37, 211, 102, 0.1);
+    }
+    
+    .msgBox i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+    
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 13px;
+    }
+    
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 25px;
+        margin: 20px;
+      }
+      
+      .back-button {
+        top: 20px;
+        left: 20px;
+        padding: 10px 18px;
+        font-size: 13px;
+      }
+      
+      .header h1 {
+        font-size: 26px;
+      }
+      
+      .header p {
+        font-size: 15px;
+      }
+      
+      .phone-number {
+        font-size: 20px;
+        padding: 10px 20px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+      
+      .container {
+        padding: 25px 20px;
+        margin: 15px 0;
+      }
+      
+      .back-button {
+        top: 15px;
+        left: 15px;
+        padding: 8px 15px;
+      }
+      
+      .header-icon {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .header-icon i {
+        font-size: 30px;
+      }
+      
+      .header h1 {
+        font-size: 24px;
+      }
+      
+      .form-input {
+        padding: 14px 18px;
+      }
+      
+      .submit-button {
+        padding: 16px;
+        font-size: 15px;
+      }
+    }
+    
+    /* WhatsApp Animation */
+    @keyframes whatsappBounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+    
+    .whatsapp-bounce {
+      animation: whatsappBounce 2s infinite;
+    }
+    </style>
+</head>
+<body>
+
+<!-- Floating Elements -->
+<div class="floating-element"></div>
+<div class="floating-element"></div>
+<div class="floating-element"></div>
+<div class="floating-element"></div>
+
+<!-- Back to Dashboard Button -->
+<a href="dashboard.html" class="back-button">
+    <i class="fas fa-arrow-left"></i>
+    Back to Dashboard
+</a>
+
+<!-- Main Container -->
+<div class="container">
+    <div class="header">
+        <div class="header-icon">
+            <i class="fab fa-whatsapp whatsapp-bounce"></i>
+        </div>
+        <h1>Contact via WhatsApp</h1>
+        <p>Send us a message directly through WhatsApp. Our support team typically responds within 2-4 hours during business days.</p>
+    </div>
+
+    <form id="contactForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" id="name" class="form-input" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                <input type="email" id="email" class="form-input" placeholder="your.email@example.com" required>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                <input type="tel" id="phone" class="form-input" placeholder="+1 234 567 8900">
+            </div>
+            
+            <div class="form-group">
+                <label for="subject"><i class="fas fa-tag"></i> Subject</label>
+                <input type="text" id="subject" class="form-input" placeholder="Support, Inquiry, Partnership..." required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="message"><i class="fas fa-comment"></i> Your Message</label>
+            <textarea id="message" class="form-input" rows="6" placeholder="Please describe your inquiry in detail..." required></textarea>
+        </div>
+        
+        <button type="submit" class="submit-button">
+            <i class="fab fa-whatsapp"></i>
+            Send To WhatsApp
+        </button>
+    </form>
+    
+    <div class="contact-info">
+        <h3><i class="fas fa-headset"></i> Direct Contact</h3>
+        <div class="phone-number">+20 150 056 4191</div>
+        <p class="response-time">
+            <i class="fas fa-clock"></i>
+            Response time: Usually within 2-4 hours
+        </p>
+    </div>
+</div>
+
+<!-- Message Box -->
+<div class="msgBox" id="msgBox"></div>
+
+<!-- Footer -->
+<footer>
+
+    <p>© 2025 BLACKWAVE API Platform • WhatsApp Contact Portal</p>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contactForm');
+    const msgBox = document.getElementById('msgBox');
+    const whatsappNumber = '201500564191'; // WhatsApp number
+    
+    // Format phone input
+    const phoneInput = document.getElementById('phone');
+    phoneInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value) {
+            value = '+' + value;
+        }
+        e.target.value = value;
+    });
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const subject = document.getElementById('subject').value.trim();
+        const message = document.getElementById('message').value.trim();
+        
+        // Validate form
+        if (!name || !email || !subject || !message) {
+            showMessage('Please fill in all required fields', 'error');
+            return;
+        }
+        
+        if (!validateEmail(email)) {
+            showMessage('Please enter a valid email address', 'error');
+            return;
+        }
+        
+        // Format WhatsApp message
+        const formattedMessage = `✨ *NEW CONTACT MESSAGE* ✨
+
+👤 *Name:* ${name}
+📧 *Email:* ${email}
+📱 *Phone:* ${phone || 'Not provided'}
+🏷️ *Subject:* ${subject}
+
+💬 *Message:*
+${message}
+
+⏰ *Time:* ${new Date().toLocaleString()}
+🌐 *Source:* BLACKWAVE API Contact Form`;
+        
+        // Encode for URL
+        const encodedMessage = encodeURIComponent(formattedMessage);
+        
+        // Create WhatsApp URL
+        const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+        
+        // Show loading message
+        showMessage('Preparing WhatsApp message...', 'success');
+        
+        // Change button to loading state
+        const submitButton = form.querySelector('.submit-button');
+        const originalHTML = submitButton.innerHTML;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening WhatsApp...';
+        submitButton.disabled = true;
+        
+        // Open WhatsApp after a short delay
+        setTimeout(() => {
+            window.open(whatsappURL, '_blank');
+            
+            // Reset form after successful submission
+            setTimeout(() => {
+                form.reset();
+                showMessage('WhatsApp opened successfully! Your message is ready to send.', 'success');
+                submitButton.innerHTML = originalHTML;
+                submitButton.disabled = false;
+            }, 1000);
+            
+        }, 1500);
+    });
+    
+    // Email validation function
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    
+    // Show message function
+    function showMessage(text, type) {
+        const icon = type === 'error' ? '❌' : '✅';
+        msgBox.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i> ${text}`;
+        msgBox.className = `msgBox ${type}`;
+        msgBox.style.display = 'block';
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            msgBox.style.display = 'none';
+        }, 5000);
+    }
+    
+    // Add floating particles
+    createParticles();
+});
+
+// Create floating particles
+function createParticles() {
+    const particlesCount = 30;
+    
+    for (let i = 0; i < particlesCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Random properties
+        const size = Math.random() * 4 + 1;
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        const duration = Math.random() * 15 + 10;
+        const delay = Math.random() * 5;
+        
+        particle.style.cssText = `
+            position: fixed;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${posX}%;
+            top: ${posY}%;
+            opacity: ${Math.random() * 0.2 + 0.1};
+            background: rgba(37, 211, 102, ${Math.random() * 0.3});
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        `;
+        
+        document.body.appendChild(particle);
+        
+        // Animate particle
+        animateParticle(particle, duration, delay);
+    }
+}
+
+// Animate particle
+function animateParticle(particle, duration, delay) {
+    setTimeout(() => {
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const endX = startX + (Math.random() - 0.5) * 30;
+        const endY = startY + (Math.random() - 0.5) * 30;
+        
+        particle.style.left = `${startX}%`;
+        particle.style.top = `${startY}%`;
+        
+        particle.animate([
+            { transform: 'translate(0, 0)', opacity: particle.style.opacity },
+            { transform: `translate(${endX - startX}%, ${endY - startY}%)`, opacity: 0 }
+        ], {
+            duration: duration * 1000,
+            iterations: Infinity,
+            direction: 'alternate',
+            easing: 'ease-in-out'
+        });
+    }, delay * 1000);
+}
+
+// Add shake animation for invalid inputs
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .shake {
+        animation: shake 0.5s ease;
+    }
+`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>

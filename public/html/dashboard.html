@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BLACKWAVE API Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+<link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+<!-- Background Canvas -->
+<canvas id="bg-canvas"></canvas>
+<div class="particles" id="particles"></div>
+
+<!-- Loader -->
+<div id="loaderOverlay">
+  <div id="loaderCard">
+    <div class="loaderCircle"></div>
+    <div class="loaderText">LOADING DASHBOARD</div>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="logo">BLACKWAVE<span>API</span></div>
+  <div class="nav-icons">
+    <i class="fa-solid fa-bell" id="notificationsBtn">
+      <span class="notification-badge"></span>
+    </i>
+    <a href="https://blackwave-api.vercel.app/profile" id="profileBtn">
+      <i class="fa-solid fa-user"></i>
+    </a>
+    <i class="fa-solid fa-bars" id="menuBtn"></i>
+  </div>
+</header>
+
+<!-- Notifications Panel -->
+<div id="notificationsPanel">
+  <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
+  <i class="fa-solid fa-x close-btn" id="closeNotifications"></i>
+  
+  <div class="notification-item unread">
+    <div class="notification-title">New API Endpoint Added</div>
+    <div class="notification-desc">AI Image Generation endpoint is now available with 10+ models.</div>
+    <span class="notification-time">2 hours ago</span>
+  </div>
+  
+  <div class="notification-item">
+    <div class="notification-title">System Maintenance</div>
+    <div class="notification-desc">Scheduled maintenance on March 15, 2025 from 2:00 AM to 4:00 AM UTC.</div>
+    <span class="notification-time">1 day ago</span>
+  </div>
+  
+  <div class="notification-item">
+    <div class="notification-title">API Usage Alert</div>
+    <div class="notification-desc">Your API usage has reached 80% of the monthly limit.</div>
+    <span class="notification-time">3 days ago</span>
+  </div>
+  
+  <div class="notification-item">
+    <div class="notification-title">New Documentation</div>
+    <div class="notification-desc">Updated API documentation with examples in 5 programming languages.</div>
+    <span class="notification-time">1 week ago</span>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <i class="fa-solid fa-x close-btn" id="closeSidebar"></i>
+  
+  <div class="user-info">
+    <img src="https://blackwave-api.vercel.app/assets/LOGO.jpg" alt="User Avatar" id="userAvatar">
+    <div>
+      <span class="username" id="username"></span>
+      <span class="userid" id="userid"></span>
+      <span class="user-role" id="userRole"></span>
+    </div>
+  </div>
+  
+  <div class="menu-item active" id="dashboardBtn">
+    <i class="fa-solid fa-chart-line"></i>
+    <span>Dashboard</span>
+    <div class="dot"></div>
+  </div>
+  
+  <!-- Admin Menu (visible only for admin/owner) -->
+  <div class="admin-section" id="adminSection">
+    <div class="menu-divider"></div>
+    
+    <div class="menu-item" data-target="adminPanel">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>Admin Panel</span>
+      <i class="fa-solid fa-chevron-down arrow"></i>
+      <div class="dot"></div>
+    </div>
+    
+    <div class="submenu" id="adminPanel">
+      <a href="/admin/panel"><i class="fa-solid fa-tachometer-alt"></i> Admin Dashboard</a>
+      <a href="/admin/users"><i class="fa-solid fa-users"></i> User Management</a>
+      <a href="/admin/manager"><i class="fa-solid fa-code"></i> API Manager</a>
+        </div>
+    
+ 
+  </div>
+  
+  <!-- APIs Section (moved to separate menu) -->
+    <a href="/api-list" class="menu-item">
+    <i class="fa-solid fa-plug"></i>
+    <span>Endpointsers</span>
+    <div class="dot"></div>
+  </a>
+  
+  <a href="#" class="menu-item" id="apiKeyBtn">
+    <i class="fa-solid fa-key"></i>
+    <span>Get API Key</span>
+    <div class="badge">Soon</div>
+  </a>
+  
+  <a href="/developers" class="menu-item">
+    <i class="fa-solid fa-code"></i>
+    <span>Developers</span>
+    <div class="dot"></div>
+  </a>
+  
+  <a href="/help" class="menu-item">
+    <i class="fa-solid fa-circle-question"></i>
+    <span>Help & Support</span>
+    <div class="dot"></div>
+  </a>
+  
+  <div class="menu-divider"></div>
+  
+  <a href="/" class="logout">
+    <i class="fa-solid fa-right-from-bracket"></i>
+    <span>Logout</span>
+  </a>
+</div>
+
+<!-- Main Content -->
+<div class="container" id="mainContainer">
+  <!-- Welcome Card -->
+  <div class="welcome-card">
+    <div class="welcome-icon">
+      <i class="fa-solid fa-hand-wave"></i>
+    </div>
+    <div>
+      <h1 id="welcomeTitle">Welcome Back, !</h1>
+      <p>This platform is designed to help new developers by apis Various functions </p>
+    </div>
+  </div>
+
+ <!-- Platform Stats -->
+<div class="stats-grid">
+  <div class="stats-card">
+    <div class="stats-icon"><i class="fa-solid fa-cloud"></i></div>
+    <div class="stats-value" id="apiGetCount">0</div>
+    <div class="stats-label">Total APIs</div>
+  </div>
+  
+  <div class="stats-card">
+    <div class="stats-icon"><i class="fa-solid fa-robot"></i></div>
+    <div class="stats-value">10+</div>
+    <div class="stats-label">AI Models</div>
+  </div>
+</div> 
+   
+
+  <!-- API Categories -->
+  <div class="section">
+    <h2><i class="fa-solid fa-layer-group"></i> API Categories</h2>
+    <div class="grid">
+      <div class="card" data-section="ai">
+        <i class="fa-solid fa-robot"></i>
+        <div class="card-content">
+          <div class="card-title">AI APIs</div>
+          <div class="card-value api-count" data-section="ai">0</div>
+          <div class="card-desc">ChatGPT, Image Generation, NLP</div>
+        </div>
+      </div>
+      
+      <div class="card" data-section="search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <div class="card-content">
+          <div class="card-title">Search APIs</div>
+          <div class="card-value api-count" data-section="search">0</div>
+          <div class="card-desc">Web, Image, Video Search</div>
+        </div>
+      </div>
+      
+      <div class="card" data-section="download">
+        <i class="fa-solid fa-download"></i>
+        <div class="card-content">
+          <div class="card-title">Download APIs</div>
+          <div class="card-value api-count" data-section="download">0</div>
+          <div class="card-desc">YouTube, Social Media, Files</div>
+        </div>
+      </div>
+      
+      <div class="card" data-section="tools">
+        <i class="fa-solid fa-wrench"></i>
+        <div class="card-content">
+          <div class="card-title">Tools APIs</div>
+          <div class="card-value api-count" data-section="tools">0</div>
+          <div class="card-desc">Utilities, Converters, Validators</div>
+        </div>
+      </div>
+      
+      <div class="card" data-section="games">
+        <i class="fa-solid fa-gamepad"></i>
+        <div class="card-content">
+          <div class="card-title">Games APIs</div>
+          <div class="card-value api-count" data-section="games">0</div>
+          <div class="card-desc">Game Info, Cheats, Stats</div>
+        </div>
+      </div>
+      
+      <div class="card" data-section="islamic">
+        <i class="fa-solid fa-mosque"></i>
+        <div class="card-content">
+          <div class="card-title">Islamic APIs</div>
+          <div class="card-value api-count" data-section="islamic">0</div>
+          <div class="card-desc">Quran, Prayer Times, Hadith</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Code Examples -->
+<div class="section" id="codeExamples">
+  <h2><i class="fa-solid fa-code"></i> API Integration Examples</h2>
+  
+  <div class="code-tabs">
+    <button class="tab active" data-lang="node">
+      <i class="fa-brands fa-node-js"></i> Node.js
+    </button>
+    <button class="tab" data-lang="python">
+      <i class="fa-brands fa-python"></i> Python
+    </button>
+    <button class="tab" data-lang="php">
+      <i class="fa-brands fa-php"></i> PHP
+    </button>
+    <button class="tab" data-lang="java">
+      <i class="fa-brands fa-java"></i> Java
+    </button>
+    <button class="tab" data-lang="curl">
+      <i class="fa-solid fa-terminal"></i> cURL
+    </button>
+  </div>
+
+  <!-- Node.js -->
+  <pre class="code-box active" id="node"><code>
+// Node.js example using axios
+const axios = require('axios');
+
+const API_KEY = 'YOUR_API_KEY_HERE';
+const BASE_URL = 'https://blackwave-api.vercel.app/api/v1';
+
+async function aiChat() {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/ai/chatgpt`,
+      { message: "Hello, how are you?", model: "gpt-4" },
+      { headers: { Authorization: `Bearer ${API_KEY}`, "Content-Type": "application/json" } }
+    );
+    console.log('Response:', response.data);
+  } catch (error) {
+    console.error('Error:', error.response?.data || error.message);
+  }
+}
+
+aiChat();
+  </code></pre>
+
+  <!-- Python -->
+  <pre class="code-box" id="python"><code>
+# Python example using requests
+import requests, json
+
+API_KEY = 'YOUR_API_KEY_HERE'
+BASE_URL = 'https://blackwave-api.vercel.app/api/v1'
+
+def download_youtube(video_url):
+    headers = { 'Authorization': f'Bearer {API_KEY}', 'Content-Type': 'application/json' }
+    params = { 'url': video_url, 'quality': 'highest' }
+    response = requests.get(f'{BASE_URL}/download/youtube', headers=headers, params=params)
+    if response.status_code == 200: return response.json()
+    else: return {'error': response.text}
+
+result = download_youtube('https://youtube.com/watch?v=VIDEO_ID')
+print(json.dumps(result, indent=2))
+  </code></pre>
+
+  <!-- PHP -->
+  <pre class="code-box" id="php"><code>
+<?php
+$apiKey = 'YOUR_API_KEY_HERE';
+$baseUrl = 'https://blackwave-api.vercel.app/api/v1';
+
+function webSearch($query) {
+    global $apiKey, $baseUrl;
+    $url = $baseUrl . '/search/web';
+    $params = ['query'=>$query,'limit'=>10];
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url . '?' . http_build_query($params),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => ["Authorization: Bearer $apiKey","Content-Type: application/json"],
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_SSL_VERIFYPEER => false
+    ]);
+    $response = curl_exec($ch);
+    if(curl_errno($ch)) return ['error'=>curl_error($ch)];
+    curl_close($ch);
+    return json_decode($response,true);
+}
+
+$results = webSearch('BLACKWAVE API');
+echo '<pre>'.print_r($results,true).'</pre>';
+?>
+  </code></pre>
+
+  <!-- Java -->
+  <pre class="code-box" id="java"><code>
+// Java example using HttpClient
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
+
+public class BlackwaveApiExample {
+    private static final String API_KEY = "YOUR_API_KEY_HERE";
+    private static final String BASE_URL = "https://blackwave-api.vercel.app/api/v1";
+
+    public static void main(String[] args) throws Exception {
+        HttpClient client = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .connectTimeout(Duration.ofSeconds(10))
+            .build();
+
+        String jsonBody = "{\"text\":\"Hello from Blackwave API\",\"voice\":\"en-US-1\"}";
+
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(BASE_URL + "/tools/text-to-speech"))
+            .header("Authorization", "Bearer " + API_KEY)
+            .header("Content-Type", "application/json")
+            .POST(BodyPublishers.ofString(jsonBody))
+            .build();
+
+        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+        System.out.println("Status Code: " + response.statusCode());
+        System.out.println("Response: " + response.body());
+    }
+}
+  </code></pre>
+
+  <!-- cURL -->
+  <pre class="code-box" id="curl"><code>
+# cURL examples for Blackwave API
+
+# 1. Get API Status
+curl -X GET "https://blackwave-api.vercel.app/api/v1/status" -H "Authorization: Bearer YOUR_API_KEY_HERE"
+
+# 2. AI Image Generation
+curl -X POST "https://blackwave-api.vercel.app/api/v1/ai/catart" \
+-H "Authorization: Bearer YOUR_API_KEY_HERE" \
+-H "Content-Type: application/json" \
+-d '{"prompt":"cyberpunk city at night","model":"stable-diffusion"}'
+
+# 3. YouTube Download
+curl -X GET "https://blackwave-api.vercel.app/api/v1/download/youtube?url=https://youtube.com/watch?v=VIDEO_ID&quality=highest" \
+-H "Authorization: Bearer YOUR_API_KEY_HERE"
+
+# 4. Web Search
+curl -X GET "https://blackwave-api.vercel.app/api/v1/search/web?query=BLACKWAVE+API&limit=10" \
+-H "Authorization: Bearer YOUR_API_KEY_HERE"
+
+# 5. Get User Profile
+curl -X GET "https://blackwave-api.vercel.app/api/v1/user/profile" \
+-H "Authorization: Bearer YOUR_API_KEY_HERE"
+  </code></pre>
+</div> <!-- نهاية section Code Examples -->
+
+<!-- JS to toggle tabs -->
+<script>
+const tabs = document.querySelectorAll('.tab');
+const codeBoxes = document.querySelectorAll('.code-box');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    // إزالة active من كل التبويبات
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    const lang = tab.dataset.lang;
+    // إظهار الكود المناسب وإخفاء البقية
+    codeBoxes.forEach(box => {
+      if(box.id === lang) box.classList.add('active');
+      else box.classList.remove('active');
+    });
+  });
+});
+</script>
+
+
+
+<!-- Footer -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>BLACKWAVE API</h4>
+      <p>Advanced API platform for developers. Access AI models, web tools, and data services through a unified interface.</p>
+    </div>
+    <div>
+      <h4>Platform</h4>
+      <p>API Documentation<br>Developer Tools<br>Support & Help Center<br>Pricing & Plans</p>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <p>Blog & Tutorials<br>API Status<br>System Updates<br>Community Forum</p>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <div class="social">
+        <a href="#"><i class="fa-brands fa-discord"></i></a>
+        <a href="#"><i class="fa-brands fa-github"></i></a>
+        <a href="#"><i class="fa-brands fa-telegram"></i></a>
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+      <p style="margin-top: 15px;">contact@blackwave-api.com</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 BLACKWAVE API Platform — Built with <i class="fa-solid fa-heart" style="color: var(--danger); margin: 0 5px;"></i> by RADIO X IZANA</div>
+</footer>
+
+<script src="../js/dashboard.js"></script>
+</body>
+</html>

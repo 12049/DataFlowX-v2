@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLACKWAVE API — Login/Register</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="../css/login.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card-wrapper" id="cardWrapper">
+
+      <!-- Login Card -->
+      <div class="card" id="loginCard">
+        <h2><i class="fa-solid fa-right-to-bracket"></i> Login</h2>
+        <form id="loginForm">
+          <div class="input-icon">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" placeholder="Email" id="loginEmail" required>
+          </div>
+          <div class="input-icon">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" placeholder="Password" id="loginPassword" required>
+          </div>
+          <span class="error" id="loginError"></span>
+          <button type="submit">Sign In</button>
+        </form>
+
+        <div class="social-line"><span>OR SIGN WITH</span></div>
+        <div class="socials">
+          <button id="loginGoogle"><i class="fa-brands fa-google"></i> Google</button>
+          <button id="loginFB"><i class="fa-brands fa-facebook"></i> Facebook</button>
+        </div>
+
+        <div class="links">
+          <a id="forgotPassword">Forgot Password?</a> | 
+          <a id="termsLink">Terms & Conditions</a> | 
+          <a id="privacyLink">Privacy Policy</a>
+        </div>
+
+        <div class="toggle" onclick="toggleCard()">Create Account</div>
+      </div>
+
+      <!-- Register Card -->
+      <div class="card" id="registerCard" style="transform:rotateY(180deg);">
+        <h2><i class="fa-solid fa-user-plus"></i> Register</h2>
+        <form id="registerForm">
+          <div class="input-icon">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" placeholder="Username" id="regUsername" required>
+          </div>
+          <div class="input-icon">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" placeholder="Email" id="regEmail" required>
+          </div>
+          <div class="phone-input">
+            <select id="countryCode">
+            <option value="+213">🇩🇿 +213</option>
+<option value="+973">🇧🇭 +973</option>
+<option value="+269">🇰🇲 +269</option>
+<option value="+253">🇩🇯 +253</option>
+<option value="+20">🇪🇬 +20</option>
+<option value="+964">🇮🇶 +964</option>
+<option value="+962">🇯🇴 +962</option>
+<option value="+965">🇰🇼 +965</option>
+<option value="+961">🇱🇧 +961</option>
+<option value="+218">🇱🇾 +218</option>
+<option value="+222">🇲🇷 +222</option>
+<option value="+212">🇲🇦 +212</option>
+<option value="+968">🇴🇲 +968</option>
+<option value="+970">🇵🇸 +970</option>
+<option value="+974">🇶🇦 +974</option>
+<option value="+966">🇸🇦 +966</option>
+<option value="+252">🇸🇴 +252</option>
+<option value="+249">🇸🇩 +249</option>
+<option value="+963">🇸🇾 +963</option>
+<option value="+216">🇹🇳 +216</option>
+<option value="+971">🇦🇪 +971</option>
+<option value="+967">🇾🇪 +967</option>
+            </select>
+            <div class="input-icon">
+              <i class="fa-solid fa-phone"></i>
+              <input type="tel" placeholder="Phone Number" id="regPhone" required pattern="[0-9]{7,15}">
+            </div>
+          </div>
+          <div class="input-icon">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" placeholder="Password" id="regPassword" required>
+          </div>
+          <span class="error" id="regError"></span>
+          <button type="submit">Create Account</button>
+        </form>
+
+        <div class="social-line"><span>OR SIGN WITH</span></div>
+        <div class="socials">
+          <button id="regGoogle"><i class="fa-brands fa-google"></i> Google</button>
+          <button id="regFB"><i class="fa-brands fa-facebook"></i> Facebook</button>
+        </div>
+
+        <div class="toggle" onclick="toggleCard()">Already have an account?</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal-bg" id="modalTerms">
+    <div class="modal">
+      <span class="close-modal" id="closeTerms">&times;</span>
+      <h3><i class="fa-solid fa-file-contract"></i> Terms & Conditions</h3>
+      <p>Welcome to <strong>BLACKWAVE API</strong>. By using this platform you agree to comply with all applicable laws and regulations.</p>
+      <p>⚠️ Selling accounts, services, or exploiting vulnerabilities is strictly prohibited.</p>
+      <p>📌 Dark API provides secure and fast API services for developers and enthusiasts.</p>
+      <div class="faq-item">
+        <div class="faq-question"><i class="fa-solid fa-circle-chevron-down"></i> Can I resell API keys?</div>
+        <div class="faq-answer">No, reselling API keys is strictly forbidden and may result in permanent ban.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><i class="fa-solid fa-circle-chevron-down"></i> How secure is my data?</div>
+        <div class="faq-answer">All user data is encrypted and handled according to strict security standards.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="modalPrivacy">
+    <div class="modal">
+      <span class="close-modal" id="closePrivacy">&times;</span>
+      <h3><i class="fa-solid fa-user-shield"></i> Privacy Policy</h3>
+      <p>BLACKWAVE API respects your privacy. Your personal information is never shared without consent.</p>
+      <p>We collect minimal data for account registration and API usage.</p>
+      <p>Contact our developers via WhatsApp:</p>
+      <p><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/201222784295" target="_blank">IZANA</a></p>
+      <p><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/201500564191" target="_blank">RADIO</a></p>
+    </div>
+  </div>
+
+<script src="../js/login.js"></script>
+</body>
+</html>

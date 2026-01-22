@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Users Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="../css/users.css">
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div id="loaderOverlay">
+  <div class="loader-container">
+    <div class="loader"></div>
+    <div class="loader-text">Loading Users Data</div>
+    <div class="loader-subtext">Please wait while we fetch the latest user information...</div>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <i class="fas fa-users"></i>
+    </div>
+    <div class="logo-text">USERS MANAGER</div>
+  </div>
+  
+  <div class="header-actions">
+    <button class="back-btn" id="backToHome">
+      <i class="fas fa-arrow-left"></i>Dashboard</button>
+    
+    <div class="header-icons">
+      <div class="icon-btn notification" title="Notifications">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="icon-btn" title="Settings">
+        <i class="fas fa-cog"></i>
+      </div>
+      <div class="icon-btn" title="User Profile">
+        <i class="fas fa-user-circle"></i>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Container -->
+<div class="main-container">
+  <!-- Dashboard Stats -->
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-info">
+          <h3>Total Users</h3>
+          <div class="stat-number" id="totalUsers">0</div>
+        </div>
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+      </div>
+      <div class="stat-trend trend-up">
+       
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-info">
+          <h3>Active Now</h3>
+          <div class="stat-number" id="activeUsers">0</div>
+        </div>
+        <div class="stat-icon">
+          <i class="fas fa-user-check"></i>
+        </div>
+      </div>
+      <div class="stat-trend trend-up">
+       
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-info">
+          <h3>Admins</h3>
+          <div class="stat-number" id="adminCount">0</div>
+        </div>
+        <div class="stat-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+      </div>
+      <div class="stat-trend trend-down">
+      
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-info">
+          <h3>Regular Users</h3>
+          <div class="stat-number" id="userCount">0</div>
+        </div>
+        <div class="stat-icon">
+          <i class="fas fa-user"></i>
+        </div>
+      </div>
+      <div class="stat-trend trend-up">
+       
+      </div>
+    </div>
+  </div>
+
+  <!-- Control Panel -->
+  <div class="control-panel">
+    <div class="panel-header">
+      <h2>
+        <i class="fas fa-sliders-h"></i>
+        User Management Controls
+      </h2>
+      
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search by name, email, phone, or role...">
+      </div>
+      
+      <div class="filter-controls">
+        <div class="filter-group">
+          <span class="filter-label">
+            <i class="fas fa-filter"></i>
+            Role:
+          </span>
+          <select id="roleFilter" class="select-box">
+            <option value="all">All Roles</option>
+            <option value="user">Users</option>
+            <option value="admin">Admins</option>
+            <option value="owner">Owners</option>
+            <option value="developer">Developers</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <span class="filter-label">
+            <i class="fas fa-sort-amount-down"></i>
+            Sort by:
+          </span>
+          <select id="sortSelect" class="select-box">
+            <option value="name_asc">Name (A-Z)</option>
+            <option value="name_desc">Name (Z-A)</option>
+            <option value="role">Role</option>
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
+        
+        <button class="add-user-btn" id="addUserBtn">
+          <i class="fas fa-user-plus"></i>
+          Add New User
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Grid -->
+  <div class="users-grid-container">
+    <div class="users-grid" id="usersGrid">
+      <!-- Users will be loaded here -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="userModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle">
+        <i class="fas fa-user-edit"></i>
+        User Details
+      </h3>
+      <span class="close-modal" id="closeModal">&times;</span>
+    </div>
+    
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="modalUsername">
+          <i class="fas fa-user"></i>
+          Username
+        </label>
+        <input type="text" id="modalUsername" class="form-input" placeholder="Enter username">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="modalEmail">
+          <i class="fas fa-envelope"></i>
+          Email Address
+        </label>
+        <input type="email" id="modalEmail" class="form-input" placeholder="Enter email address">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="modalPhone">
+          <i class="fas fa-phone"></i>
+          Phone Number
+        </label>
+        <div class="phone-input-group">
+          <div class="country-code">
+            <i class="fas fa-flag"></i>
+            +20
+          </div>
+          <input type="text" id="modalPhone" class="form-input phone-input" placeholder="Enter phone number">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="modalRole">
+          <i class="fas fa-user-tag"></i>
+          User Role
+        </label>
+        <select id="modalRole" class="form-input">
+          <option value="user">Regular User</option>
+          <option value="admin">Administrator</option>
+          <option value="owner">Owner</option>
+          <option value="developer">Developer</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="modal-btn save-btn" id="saveUserBtn">
+        <i class="fas fa-save"></i>
+        Save Changes
+      </button>
+      <button class="modal-btn cancel-btn" id="cancelUserBtn">
+        <i class="fas fa-times"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>© 2026 Users Management System. All rights reserved. | 
+  </p>
+</div>
+<script src="../js/users.js"></script>
+</body>
+</html>

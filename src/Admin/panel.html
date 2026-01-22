@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Panel Style -->
+  <link rel="stylesheet" href="panel.css">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo">Admin Panel</div>
+  <div class="nav-icons">
+    <i class="fa-solid fa-bars" id="openSidebar"></i>
+  </div>
+</header>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <i class="fa-solid fa-xmark close-btn" id="closeSidebar"></i>
+
+  <div class="user-info">
+    <img src="https://i.imgur.com/1X6pK6R.png">
+    <div>
+      <strong>API Administrator</strong>
+      <span class="muted">Root Access</span>
+    </div>
+  </div>
+
+  <div class="menu-item active">
+    <span><i class="fa-solid fa-gauge-high"></i> Dashboard</span>
+    <div class="dot"></div>
+  </div>
+
+  <div class="menu-item">
+    <span><i class="fa-solid fa-robot"></i> Bots</span>
+    <div class="dot"></div>
+  </div>
+
+  <div class="menu-item">
+    <span><i class="fa-solid fa-key"></i> API Keys</span>
+    <div class="dot"></div>
+  </div>
+
+  <div class="logout">
+    <i class="fa-solid fa-right-from-bracket"></i> Logout
+  </div>
+</div>
+
+<!-- Main Container -->
+<div class="container" id="container">
+
+  <!-- Welcome Card -->
+  <div class="welcome-card">
+    <i class="fa-solid fa-user-shield fa-2x" style="color:var(--accent)"></i>
+    <div>
+      <h1>Welcome, RADIO!</h1>
+      <p>Monitor your bots and manage API access.</p>
+    </div>
+  </div>
+
+  <!-- Bots Section -->
+  <div class="section">
+    <h2>Bots Status</h2>
+    <div class="grid" id="botsGrid">
+      <!-- Bot cards dynamically added here -->
+    </div>
+  </div>
+</div>
+
+<!-- Loader Overlay -->
+<div id="loaderOverlay">
+  <div id="loaderCard">
+    <div class="loaderCircle"></div>
+    <div class="loaderText">Loading...</div>
+  </div>
+</div>
+
+<!-- Panel JS -->
+<script src="panel.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlackWave | Admin Portal</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Panel Style -->
+  <link rel="stylesheet" href="../css/admin.css">
+
+</head>
+
+<body>
+<div class="bg-pattern"></div>
+
+<div class="login-container">
+  <div class="login-header">
+    <div class="logo-container">
+      <div class="logo-icon">
+        <i class="fas fa-wave-square"></i>
+      </div>
+      <div class="logo-text">BlackWave</div>
+    </div>
+    <h1>Admin Portal</h1>
+    <p>Secure access for administrators and owners only</p>
+  </div>
+
+  <div class="input-group">
+    <div class="input-label">
+      <i class="fas fa-user-shield"></i>
+      <span>User ID</span>
+    </div>
+    <div class="input-wrapper">
+      <input type="text" id="userId" class="input-field" placeholder="Enter your user ID">
+      <i class="fas fa-id-card input-icon"></i>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <div class="input-label">
+      <i class="fas fa-key"></i>
+      <span>Password</span>
+    </div>
+    <div class="input-wrapper">
+      <input type="password" id="password" class="input-field" placeholder="Enter your password">
+      <i class="fas fa-eye input-icon password-toggle" id="togglePassword"></i>
+    </div>
+  </div>
+
+  <button class="login-button" id="loginBtn">
+    <i class="fas fa-sign-in-alt"></i>
+    <span>Authenticate</span>
+  </button>
+
+  <div class="error-message" id="errorMsg">
+    <i class="fas fa-exclamation-circle"></i>
+    <span id="errorText"></span>
+  </div>
+
+  <div class="security-note">
+    <i class="fas fa-shield-alt"></i>
+    <p>This portal is protected by advanced security protocols. Unauthorized access attempts are logged and monitored.</p>
+  </div>
+
+  <div class="login-footer">
+    <p>Need help? <a href="https://wa.me/201500564191">Contact Security Team</a></p>
+  </div>
+</div>
+
+<!-- Loader -->
+<div class="loader-overlay" id="loaderOverlay">
+  <div class="loader-content">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Verifying credentials...</div>
+  </div>
+</div>
+<script src="../js/admin.js"></script>
+</body>
+</html>
